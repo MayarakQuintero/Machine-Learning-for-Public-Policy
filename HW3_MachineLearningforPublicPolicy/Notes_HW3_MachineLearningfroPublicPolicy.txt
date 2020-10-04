@@ -1,0 +1,99 @@
+conda activate geo_env
+
+https://towardsdatascience.com/accessing-census-data-with-python-3e2f2b56e20d
+
+https://www.census.gov/data/developers/data-sets/acs-1year/notes-on-acs-api-variable-formats.html
+
+VARIABLES
+https://api.census.gov/data/2015/acs/acs5/variables.html
+
+crime_gdf.rename(columns={"index_right": "previous_index_right"}, inplace = True)
+
+DISCRETIZE
+https://pbpython.com/pandas-qcut-cut.html
+
+###############################
+COLUMNS WITH NAN
+###############################
+nan_values = merged_gdf.isna()
+nan_columns = nan_values.any()
+columns_with_nan = merged_gdf.columns[nan_columns].tolist()
+print(columns_with_nan)
+###############################
+
+['ID', 
+'Case Number', 
+'Date', 
+'Block', 
+'IUCR', 
+'Primary Type',
+'Description', 
+'Location Description', 
+'Arrest', 
+'Domestic', 
+'Beat',
+'District', 
+'Ward', 
+'Community Area', 
+'FBI Code', 
+'X Coordinate',
+'Y Coordinate', 
+'Year', 
+'Updated On', 
+'Location', 
+'DATE', 
+'HOUR',
+'COUNT', 
+'geometry', 
+'previous_index_right', 
+'pri_neigh', 
+'sec_neigh',
+'shape_area', 
+'shape_len', 
+'index_right', 
+'TPOP', 
+'WPOP', 
+'BPOP',
+'MINC', 
+'GEO_ID', 
+'WPOPPER', 
+'BPOPPER']
+
+VARIABLES QUE CONSERVO
+['Primary Type','Arrest', 'Ward','FBI Code','MINC','WPOPPER','BPOPPER']
+
+FEATURES
+['Primary Type', 'Ward','FBI Code','MINC','WPOPPER','BPOPPER']
+
+def build_classifier(X_train, X_test, y_train, y_test, MODELS, GRID ):
+	start = datetime.datetime.now()
+
+	result_df = pd.DataFrame({"Training Model": [], "Parameters": [], "Metrics":[]})
+	# YOUR CODE HERE
+
+	# Loop over models 
+	for model_key in MODELS.keys(): 
+
+		# Loop over parameters 
+		for params in GRID[model_key]: 
+			print("Training model:", model_key, "|", params)
+
+			# Create model 
+			model = MODELS[model_key]
+			model.set_params(**params)
+
+			# Fit model on training set 
+			model.fit(X_train, y_train)
+			
+			# Predict on testing set 
+			model.predict(X_test)
+			
+			# Evaluate predictions 
+			print('Accuracy Score', model.score(X_test, y_test))
+
+			# Store results in your results data frame 
+			# YOUR CODE HERE
+
+	# End timer
+	stop = datetime.datetime.now()
+	print("Time Elapsed:", stop - start)
